@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+	<style>
+		#panel {
+  background-color: lightblue;
+  width: 80%;
+  height: 80%;
+  position: fixed;
+  text-align: center;
+  display: none;
+}
+.container {
+  display: flex;
+  justify-content: center;
+}
+.change {
+  position: absolute;
+  bottom: 30%;
+  left: 44%;
+  border-color: blue;
+  background-color: white;
+  font-size: 50px;
+  border-radius: 5px;
+  zoom: 150%;
+  cursor: pointer;
+}
+.change:hover {
+  background-color: lightgreen;
+}
+.box:link,.box:visited {
+  background-color: lightgrey;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  position: fixed;
+  right: 2px;
+  top: 2px;
+  display: none;
+}
+
+.box:hover, .box:active {
+  background-color:red;
+  color: white;
+}
+h1 {
+  font-size: 60px;
+}
+body {
+overflow:hidden;
+  background-image: url("https://new.photos.idx.io/fmls-reso/5831847/45818368.jpg");
+  width: 500px;
+  height: 1000px;
+  //background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  //height: 100%;
+}
+.begin {
+  background-color: white;
+  position: fixed;
+  left: 25%;
+  top: 28%;
+  width: 50%;
+  height: 45%;
+  padding: 20px;
+}
+.p {
+  display: none;
+}
+h2 {
+	font-size: 200%;
+}
+input {
+	zoom: 120%;
+	border: 1px solid grey;
+}
+.button1 {
+	background-color: lightblue;
+	color: black;
+	border: 1px solid blue;
+	zoom: 120%;
+	border-radius: 5px;
+}
+
+</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Tennis Reservations</title>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  </head>
+  <body>
+    <div class="begin"> <h3>Make an account:</h3><input class="one" onclick="turnover()" type="email" id="email" value ="Email" name="email"><br><br>
+	<input maxlength="9" class="one" onclick="turnov()" type="text" id="text" value ="First Name" name="text"><br><br>
+	<input class="one" onclick="turno()" type="text" id="text2" value ="Last Name" name="text"><br><br>
+	<input class="one" onclick="turnove()" type="text" id="pwd" value ="Password" name="pwd"><br><br>
+	<button class="button1" onclick="inat()"> Create </button><br>
+  <script>
+  function inat() {
+	  let name1 = document.getElementById("text2").value;
+	  	  let entry = name1[0] + "." + document.getElementById("text").value;
+	  //make good conditions here
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+		if(xhttp.responseText.includes(document.getElementById("email").value) != true ) {
+			if(xhttp.responseText.includes(entry) != true) {
+				if(document.getElementById("email").value.includes('@') == true) {
+					let interpret = "{" + document.getElementById("email").value + "😃" + document.getElementById("pwd").value + "😃" + entry + "}";
+	 				 window.location = "http://tennis.roydero.com/make.php?uname=" + interpret + "&rname=Tennis1&enSubmit=Enter";
+				} else {
+					alert("Invalid email!");
+				}
+			} else {
+				alert("Sorry, that name is taken.");
+			}
+		} else {
+			alert("Sorry, that email is already in use.")
+		}
+    }
+};
+xhttp.open("GET", "Tennis1.txt", true);
+xhttp.send();
+
+  }
+  
+  function turnover() {
+  document.getElementById("email").value = "";
+    }
+   function turnove() {
+  document.getElementById("pwd").value = "";
+  }
+  function turnov() {
+  document.getElementById("text").value = "";
+  }
+  function turno() {
+  document.getElementById("text2").value = "";
+  }
+  </script>
+    	<script>
+	window.onload = function() {
+		setInterval(function(){ 
+			if(window.location.href == "https://tennis.roydero.com/create.html") {
+				 window.location = "http://tennis.roydero.com/create.html";
+			} else {
+				//now data can get passed through
+			}
+			//window.location.href
+			}, 1000);
+	}
+</script>
+<br><br></div>
+  </body>
+</html>
