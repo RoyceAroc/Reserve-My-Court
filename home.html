@@ -1,0 +1,827 @@
+ 
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+ 
+<title>Tennis</title>
+<link rel="stylesheet" type="text/css" href="compatibility.css">
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+@import url("https://fonts.googleapis.com/css?family=Lato&display=swap");
+.calendar {
+ transform: translate(-50%, -50%);
+ font-family: 'Lato', sans-serif;
+ box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
+ background-color: white;
+}
+.calendar .header {
+ background: #009688;
+ color: white;
+ padding: 20px 15px;
+ font-size: 2rem;
+}
+.calendar .header div:first-child {
+ font-size: 1.2rem;
+ opacity: 0.8;
+}
+.calendar .selector {
+ margin: 20px;
+ position: relative;
+ font-size: 1.5rem;
+}
+.calendar .selector span {
+ font-size: 1.3rem;
+ position: absolute;
+ left: 50%;
+ transform: translateX(-50%);
+}
+.calendar .selector i {
+ cursor: pointer;
+}
+.calendar .selector i.fa-chevron-right {
+ float: right;
+}
+.calendar .days {
+ margin: 20px;
+ font-size: 1.2rem;
+}
+.calendar .days > * {
+ display: grid;
+ justify-items: center;
+ grid-template-columns: repeat(7, 1fr);
+ margin: 20px 0px;
+}
+.calendar .days .days-in-week {
+ font-weight: bold;
+ opacity: 0.4;
+}
+.calendar .days .days-in-month span {
+ width: 50%;
+ text-align: center;
+ border-radius: 100%;
+ cursor: pointer;
+ padding: 8px;
+}
+.calendar .days .days-in-month span.today {
+ background: rgba(0, 96, 88, 0.4);
+}
+
+.calendar .days .days-in-month span.selected {
+  background: #009688;
+ color: white;
+}
+.calendar .days .days-in-month span.different-month {
+ opacity: 0.4;
+}
+table {
+    text-align: center;
+    border: 1px solid black;
+        border-collapse: collapse;
+        font-size: 12px;
+		background-color: white;
+}
+
+table td {
+   border-left: 1px solid grey;
+   border-right: 1px solid grey;
+}
+ 
+table td:first-child {
+   border-left: none;
+}
+ 
+table td:last-child {
+   border-right: none;
+}
+td {
+ 	padding: 10px;
+}
+td:nth-child(1) {
+        height: 2px;
+    background-color: #009688;
+    color: white;
+ 
+}
+td:nth-child(2) {
+    height: 2px;
+width: 200px;
+   //  border-bottom: 1px solid grey;
+}
+td:nth-child(3) {
+height: 2px;    
+width: 200px;
+ //	border-bottom: 1px solid grey;
+}
+tr:first-child {
+    background-color: orange;
+	position: sticky;
+    color: white;
+    border-bottom: 1px solid #000;
+}
+
+tr:last-child {
+    display: none;
+}
+.wonder {
+ margin: 0;
+ color: black;
+}
+/* The container must be positioned relative: */
+.custom-select {
+  position: relative;
+  font-family: Arial;
+}
+
+.custom-select select {
+  display: none; /*hide original SELECT element: */
+}
+
+.select-selected {
+  background-color: DodgerBlue;
+}
+
+/* Style the arrow inside the select element: */
+.select-selected:after {
+  position: absolute;
+  content: "";
+  top: 14px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-color: #fff transparent transparent transparent;
+}
+
+/* Point the arrow upwards when the select box is open (active): */
+.select-selected.select-arrow-active:after {
+  border-color: transparent transparent #fff transparent;
+  top: 7px;
+}
+
+/* style the items (options), including the selected item: */
+.select-items div,.select-selected {
+  color: #ffffff;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+  cursor: pointer;
+}
+
+/* Style items (options): */
+.select-items {
+  position: absolute;
+  background-color: DodgerBlue;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+
+/* Hide the items when the select box is closed: */
+.select-hide {
+  display: none;
+}
+
+.select-items div:hover, .same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+</style>
+ 
+</head>
+<body >
+<div style=" bottom:0; position: fixed;" id="place"></div>
+<div style="position: fixed; z-index: -99; width: 100%; height: 100%">
+ <img style="width: 100%; height: 100%; left:0;position: fixed; top:0;" src="https://wallpaperaccess.com/full/780473.jpg"/>
+</div>
+ 
+ 
+<script>
+    let ar = 0;
+    let art_time = 480;
+//create artifical table using js
+window.onload = function() {
+ var x = document.createElement("TABLE");
+ x.setAttribute("id", "myTable");
+ document.getElementById("place").appendChild(x);
+ 
+ var y = document.createElement("TR");
+ y.setAttribute("id", "myTr");
+ document.getElementById("myTable").appendChild(y);
+ 
+ var z = document.createElement("TD");
+ var t = document.createTextNode("Time");
+ z.appendChild(t);
+ document.getElementById("myTr").appendChild(z);
+var z = document.createElement("TD");
+ var t = document.createTextNode("Court 1");
+ z.appendChild(t);
+ document.getElementById("myTr").appendChild(z);
+ var z = document.createElement("TD");
+ var t = document.createTextNode("Court 2");
+ z.appendChild(t);
+ document.getElementById("myTr").appendChild(z);
+ for(i=0; i<30; i++) {
+    ar++;
+ var start = document.createElement("TR");
+ start.setAttribute("id", ar);
+ document.getElementById("myTable").appendChild(start);
+ 
+   var z = document.createElement("TD");
+    if(art_time >= 780) {
+        if(art_time % 60 == 0) {
+       var t = document.createTextNode((parseInt(art_time / 60)-12) + ": 00 PM") ;
+    } else {
+ 	 var t = document.createTextNode((parseInt(art_time / 60)-12) + ": 30 PM") ;   
+    }
+    } else {
+    if(art_time % 60 == 0) {
+       var t = document.createTextNode(parseInt(art_time / 60) + ": 00 AM") ;
+    } else {
+ 	 var t = document.createTextNode(parseInt(art_time / 60) + ": 30 AM") ;    
+    }
+    }
+ art_time +=30;
+ z.appendChild(t);
+ document.getElementById(ar).appendChild(z);
+    for(j=0; j<2; j++) {
+     	 var z = document.createElement("TD");
+ var t = document.createTextNode("");
+ z.appendChild(t);
+ document.getElementById(ar).appendChild(z);
+    }
+ 
+ }
+}
+</script>
+
+<div id="blue" style="position: fixed; background-color: lightblue; color: black;" ><h2>Reservation Info: </h2><label for="cars">Choose a court:<br></label>
+ 
+<select class="custom-select" name="courts" id="courts">
+ <option value="a">Court 1</option>
+ <option value="b">Court 2</option>
+</select><br>
+<label for="Stime"> Start Time: <br></label>
+<div id="start"></div>
+<label for="Etime"> End Time: <br></label>
+<div id="end"></div><br>
+<button style="border: 1px solid white; color: green; background-color: lightyellow; zoom: 120%; border-radius: 5px;" onclick="check()">Reserve</button>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+
+<script>
+ 	 let finale = 0;
+ 	 let ace = true;
+function check() {
+ 	 var x = document.getElementById("a1").selectedIndex;
+ 	 var x1 = document.getElementById("a2").selectedIndex;
+ 	 if(Math.abs(x-x1) <= 4 & Math.abs(x-x1)>=2 & x<x1) {
+     	 var courtNum = document.getElementById('courts');
+     	 if(courtNum.value=="a") {
+         	 finale = 1;
+     	 } else {
+         	 finale = 2;
+     	 }
+     	 for(y=0; y<=Math.abs(x-x1); y++) {
+         	   var tr6 = document.getElementById(x+y+1);
+                var tds6 = tr6.getElementsByTagName("td");
+                if(tds6[finale].classList.contains('wonder')) {
+                        ace = false;
+                }
+     	 }
+     	 finale = 0;
+ 	if(ace == true) {  //check if ppl already reserved the court
+ 	let date = localStorage.getItem("date");
+     	 if(date== "") {
+            var d = new Date();
+            var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+            var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+            date = days[d.getDay()]+" " + months[d.getMonth()] + " " + d.getDate() + " " + d.getFullYear() + " 00:00:00 GMT-0400";
+     	 } else {
+         	 date = localStorage.getItem("date");
+     	 }
+let interpret = "["+date+"|"+ localStorage.getItem("name") +"|"+courtNum.value+"|"+"("+x+")"+ "("+x1+")|]";
+window.location = "http://tennis.roydero.com/?uname=" + interpret + "&rname=Tennis&enSubmit=Enter";
+ 	 } else {
+     	 alert("Hey there! Someone already reserved a court in the time slot");
+ 	 }
+ 
+ 	 } else {
+		  alert("𝐏𝐥𝐞𝐚𝐬𝐞 𝐟𝐨𝐥𝐥𝐨𝐰 𝐫𝐞𝐬𝐞𝐫𝐯𝐚𝐭𝐢𝐨𝐧 𝐠𝐮𝐢𝐝𝐞𝐥𝐢𝐧𝐞𝐬:\n Must be more than 30 mins and less than 2 hours.")
+	  }
+ 	     ace = true;
+}
+ 
+ 
+$('#start').on('change', function() {
+ var x = document.getElementById("a1").selectedIndex;
+if(x>25) {
+    if(x>27) {
+document.getElementById('a2').getElementsByTagName('option')[29].selected = 'selected';
+} else {
+    document.getElementById('a2').getElementsByTagName('option')[x+2].selected = 'selected';
+ 
+}
+} else {
+document.getElementById('a2').getElementsByTagName('option')[x+4].selected = 'selected';
+}
+});
+ 
+ 
+    let time = 480;
+   let ten = 0;
+    let play = 0;
+var x = document.createElement("select");
+ x.setAttribute("id", "a1");
+ document.getElementById("start").appendChild(x);
+ for(o=0; o<30; o++) {
+ten++;
+ var x1 = document.createElement("OPTION");
+if(time >= 780) {
+        if(time % 60 == 0) {
+       var t1 = document.createTextNode((parseInt(time / 60)-12) + ":00 PM") ;
+    } else {
+ 	 var t1 = document.createTextNode((parseInt(time / 60)-12) + ":30 PM") ;   
+    }
+    } else {
+    if(time % 60 == 0) {
+       var t1 = document.createTextNode(parseInt(time / 60) + ":00 AM") ;
+    } else {
+ 	 var t1 = document.createTextNode(parseInt(time / 60) + ":30 AM") ;    
+    }
+    }
+ time +=30;
+ play++;
+ x1.appendChild(t1);
+ document.getElementById("a1").appendChild(x1);
+ 
+ 
+ 
+ }
+ 
+ 
+    time = 480;
+    ten = 0;
+var x = document.createElement("select");
+ x.setAttribute("id", "a2");
+ document.getElementById("end").appendChild(x);
+ for(o=0; o<30; o++) {
+ten++;
+ var x2 = document.createElement("OPTION");
+ x2.setAttribute("value", ten+"*");
+if(time >= 780) {
+        if(time % 60 == 0) {
+       var t2 = document.createTextNode((parseInt(time / 60)-12) + ":00 PM") ;
+    } else {
+ 	 var t2 = document.createTextNode((parseInt(time / 60)-12) + ":30 PM") ;   
+    }
+    } else {
+    if(time % 60 == 0) {
+       var t2 = document.createTextNode(parseInt(time / 60) + ":00 AM") ;
+    } else {
+ 	 var t2 = document.createTextNode(parseInt(time / 60) + ":30 AM") ;    
+    }
+    }
+ time +=30;
+ x2.appendChild(t2);
+ document.getElementById("a2").appendChild(x2);
+ 
+ 
+ 
+ }
+ let date="";
+</script>
+<div id="app"></div>
+ 
+<script src="script.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/react/16.10.2/umd/react.production.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mobx/3.1.9/mobx.umd.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mobx-react/4.1.8/index.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+
+<script>
+
+
+ 
+var _temp, _temp2, _temp3;function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}const { observable } = mobx;
+const { observer } = mobxReact;
+const { Component } = React;
+ 
+const store = observable({
+ today: moment().startOf('day'),
+ selectedDay: moment().startOf('day').add(0, "days"),
+ selectedMonth: moment().startOf('month'),
+ daysInWeek: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+ 
+ changeMonth: function (num) {
+   this.selectedMonth = moment(this.selectedMonth.add(num, "months"));
+ },
+ 
+ changeDay: function (day) {
+	 setInterval(function(){ 
+			if(window.location.href == "https://tennis.roydero.com/home.html") {
+				 window.location = "http://tennis.roydero.com/home.html";
+			} else {
+				//now data can get passed through
+			}
+			//window.location.href
+			}, 500);
+//first we shall write a sample function as to find the difference between today's date, and the selected date (Note: Take into consideration leap years, years, days, and dates)
+
+ 	 //now we shall have fun filling out the table: Note: Don't forget to clear out the table first
+                        for(boom=1; boom<30; boom++) {
+                            var tr = document.getElementById(boom);
+                            var tds = tr.getElementsByTagName("td");
+                            tds[1].classList.remove("wonder");
+                            tds[1].style.backgroundColor = "";
+                            tds[2].style.backgroundColor = "";
+                           tds[2].classList.remove("wonder");
+                         	 tds[1].innerHTML = "";
+                         	 tds[2].innerHTML = "";
+                        }
+   this.selectedDay = day;
+    let entry = "";
+    let finale = "";
+                            let randColor = "";
+    let hope = "";
+    let long = [];
+    let elapse = "";
+    let sTime = "";
+    let callNum = "";
+    let eTime = "";
+    let cnt1 = 0;
+    let human = "";
+    let happy = true;
+    localStorage.setItem("date", day);
+    const Url = 'Tennis.txt';
+    let checkDate = localStorage.getItem("date");
+    $.ajax({
+        url: Url,
+        type: "Get",
+        success: function(result) {
+            for(a1=1; a1<=result.length; a1++) {
+                cnt1++;
+                if(cnt1 != 34) {
+                    entry += result[a1];
+                } else {
+                    //find the next ]
+                    for(eat=0; eat<24; eat++) {
+                        if(result[a1+eat] == "]") {
+                            hope = eat+1;
+                        }
+                    }
+                    if(checkDate == entry) {
+                        //pass
+                        for(a2=a1;a2<(a1+hope); a2++) {
+                            finale += result[a2];
+                        }
+                        for(a3=1; a3<finale.length;a3++) {
+                            if(finale[a3] == "|" & a3 != 1) {
+                                if(elapse.includes("]") == true) {
+                                    for(binge=1; binge<elapse.length; binge++) {
+                                        human += elapse[binge];
+                                    }
+                                    elapse = human;
+                                }
+                                long.push(elapse);
+                                elapse = "";
+                                human = "";
+                            } else {
+                                elapse += finale[a3];
+                            }
+                        }
+                        
+                        let huge = long[2];
+                        for(j=1; j<long[2].length; j++) {
+                            if(happy == true) {
+                                if(huge.charAt(j) == ")") {
+                                    happy = false;
+                                    //alert(sTime);
+                                } else {
+                                    sTime += huge.charAt(j);
+                                }
+                            } else {
+                                if(huge.charAt(j+1) == ")") {
+                                    //alert(eTime);
+                                } else {
+                                    eTime += huge.charAt(j+1);
+                                }
+                            }
+                        }
+                        happy = true;
+                        huge = "";
+                        if(long[1] == "a") {
+                            callNum = 1;
+                        } else {
+                            callNum = 2;
+                        }
+                        //now fill in the tables down
+                        let cool = "";
+                        let cool1 = "";
+                        var nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+                        for(nt=0; nt<nums.length; nt++) {
+                            if(sTime == nums[nt]) {
+                                cool = nt;
+                            }
+                        }
+                        for(nt=0; nt<nums.length; nt++) {
+                            if(eTime == nums[nt]) {
+                                cool1 = nt;
+                            }
+                        }
+//get color
+                        
+                        
+                            let sEt = ["lightyellow", "coral", "lightgrey", "violet", "pink", "#00FFFF",  "#ADD8E6", "#808000", "#B6B6B4" ];
+                        randColor = Math.floor((Math.random() * 9) + 0);
+                        for(l=cool+1; l<=cool1; l++) {
+                            var trR = document.getElementById(l);
+                            var cg = trR.getElementsByTagName("td");
+                            cg[callNum].className = "wonder";
+                            cg[callNum].style.backgroundColor = sEt[randColor];
+                            //cg[callNum].innerHTML = long[0];
+                        }
+                    var trR = document.getElementById(Math.floor((cool1 - cool)/2)+cool);
+                        var cg = trR.getElementsByTagName("td");
+                        cg[callNum].innerHTML = "<i>"+long[0]+"</i>";
+
+			
+				let myName = localStorage.getItem("name");
+				if(myName == long[0]) {
+					cg[callNum].innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button onclick=\"codeEx(" + callNum + ")\">X</button";
+				}
+		
+
+
+
+                        var trR = document.getElementById(Math.floor((cool1 - cool)/2)+cool+1);
+                        var cg = trR.getElementsByTagName("td");
+                     	 var x = document.getElementById("a1")[cool];
+                     	 var y = document.getElementById("a1")[cool1];
+                        cg[callNum].innerHTML = "<b>"+ x.value + " - " + y.value +"</b>";
+
+                        
+                        
+ 
+ 
+                        happy = true;
+                        sTime = "";
+                        cool = "";
+                        cool1 = "";
+                        eTime = "";
+                        l=0;
+                        //work up now
+                        long = [];
+                        finale = "";
+                        a1+= hope;
+                    } else {
+                        a1 += hope;
+                        //fail let's try again
+                    }
+                    entry= "";
+                    cnt1=0;
+                }
+                
+            }
+        },
+        error:function(error) {
+            alert("Sorry there was an arror when processing the request!");
+        }
+    })
+ } });
+ 
+const App = observer(
+class App extends Component {
+ render() {
+   const { store } = this.props;
+   return (
+     React.createElement("div", { className: "calendar" },
+     React.createElement(Header, { selectedDay: store.selectedDay }),
+     React.createElement(Selector, { store: store }),
+     React.createElement(DaysGrid, { store: store })));
+ 
+ 
+ }});
+ 
+ 
+ 
+const Header = observer(
+class Header extends Component {
+ render() {
+   return (
+     React.createElement("div", { className: "header" },
+     React.createElement("div", null, this.props.selectedDay.format("YYYY")),
+     React.createElement("div", null, this.props.selectedDay.format("dddd, MMM DD"))));
+ }});
+ 
+ 
+ 
+const Selector = observer((_temp =
+class Selector extends Component {constructor(...args) {super(...args);_defineProperty(this, "handleAddMonth",
+   () => {
+     this.props.store.changeMonth(1);
+   });_defineProperty(this, "handleSubtractMonth",
+ 
+   () => {
+     this.props.store.changeMonth(-1);
+   });}
+ 
+ render() {
+   return (
+     React.createElement("div", { className: "selector" },
+     React.createElement("i", { className: "fas fa-chevron-left", onClick: this.handleSubtractMonth }),
+	//React.createElement("i", { className: "fas fa-chevron-left", onClick: this.handleChangeDay }),
+     React.createElement("span", null, this.props.store.selectedMonth.format("MMM YYYY")),
+     React.createElement("i", { className: "fas fa-chevron-right", onClick: this.handleAddMonth })));
+ 
+ 
+ }}, _temp));
+ 
+ 
+ 
+const DaysGrid = observer((_temp2 =
+class DaysGrid extends Component {constructor(...args) {super(...args);_defineProperty(this, "getDaysInMonth",
+ 
+   () => {
+     const { selectedMonth } = this.props.store;
+     const totalDays = new Array();
+     const totalLimit = 42; // 6 lines x 7 days
+ 
+     // Add days of current month
+     for (let i = 0; i < selectedMonth.daysInMonth(); i++) {if (window.CP.shouldStopExecution(6)) break;if (window.CP.shouldStopExecution(3)) break;if (window.CP.shouldStopExecution(0)) break;
+       totalDays.push(moment(selectedMonth).add(i, "days"));
+     }
+ 
+     // Add days of previous month if first day of current month isn't Sunday
+     window.CP.exitedLoop(6);window.CP.exitedLoop(3);window.CP.exitedLoop(0);if (moment(selectedMonth).day() !== 0) {
+       const previousMonth = moment(selectedMonth).subtract(1, 'months').endOf("month").startOf("day");
+       for (let i = 0; i < moment(selectedMonth).day(); i++) {if (window.CP.shouldStopExecution(7)) break;if (window.CP.shouldStopExecution(4)) break;if (window.CP.shouldStopExecution(1)) break;
+         totalDays.unshift(moment(previousMonth).subtract(i, "days"));
+       }window.CP.exitedLoop(7);window.CP.exitedLoop(4);window.CP.exitedLoop(1);
+     }
+ 
+     // Add days of next month if total days is no enough
+     if (totalDays.length < totalLimit) {
+       const nextMonth = moment(selectedMonth).add(1, 'months');
+       const daysToFill = totalLimit - totalDays.length;
+       for (let i = 0; i < daysToFill; i++) {if (window.CP.shouldStopExecution(8)) break;if (window.CP.shouldStopExecution(5)) break;if (window.CP.shouldStopExecution(2)) break;
+         totalDays.push(moment(nextMonth).add(i, "days"));
+       }window.CP.exitedLoop(8);window.CP.exitedLoop(5);window.CP.exitedLoop(2);
+     }
+ 
+     return totalDays;
+   });}
+ 
+ render() {
+   const { daysInWeek, selectedDay, selectedMonth, today } = this.props.store;
+   return (
+     React.createElement("div", { className: "days" },
+     React.createElement("div", { className: "days-in-week" },
+     daysInWeek.map(d => React.createElement("span", null, d))),
+ 
+     React.createElement("div", { className: "days-in-month" },
+     this.getDaysInMonth().map(d => React.createElement(Day, { day: d, store: this.props.store })))));
+ 
+ 
+ 
+ }}, _temp2));
+ 
+ 
+ 
+const Day = observer((_temp3 =
+class Day extends Component {constructor(...args) {super(...args);_defineProperty(this, "getClassName",
+ 
+   () => {
+     const { day } = this.props;
+     const { daysInWeek, selectedDay, selectedMonth, today } = this.props.store;
+ 
+     if (day.diff(today, "days") === 0) {
+       return "today";
+     } else if (day.diff(selectedDay, "days") === 0) {
+       return "selected";
+     } else if (day.month() != selectedMonth.month()) {
+       return "different-month";
+     } else {
+       return "";
+     }
+   });_defineProperty(this, "handleChangeDay",
+ 
+   () => {
+     this.props.store.changeDay(this.props.day);
+   });}
+ 
+
+ 
+ render() {
+   return (
+     React.createElement("span", { className: this.getClassName(), onClick: this.handleChangeDay },
+     this.props.day.date()));
+ }}, _temp3));
+ 
+
+ 
+ 
+ReactDOM.render(
+React.createElement(App, { store: store }),
+document.getElementById("app"));
+//# sourceURL=pen.js
+
+
+   </script>
+
+    <script src="script.js"></script>
+
+	      <script>
+			  var hey;
+	   $(document).ready(function(){
+		  hey =  setTimeout(function(){   $('span.today').click();clearTimeout(hey); }, 1500);
+});
+	</script>
+	<script>
+		function codeEx(param) {
+		var parac;
+		if(param == 1) {
+			parac = "a";
+		} else {
+			parac = "b";
+		}
+		let cool = true;
+		let code1 = "";
+		let c= 0;
+			var xhttp = new XMLHttpRequest();
+  			xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				let code = "[" + localStorage.getItem("date") + "|" + localStorage.getItem("name") + "|" + parac;
+				let cope = this.responseText;
+				var delNum = this.responseText.indexOf(code);
+				while(cool == true) {
+					c++;
+					if(cope[delNum+c+2+localStorage.getItem("date").length+localStorage.getItem("name").length] == "]") {
+						cool = false;
+					} else {
+						code1 += cope[delNum+c+3+localStorage.getItem("date").length+localStorage.getItem("name").length];
+					}
+				}
+				let code2 = code + code1;
+				var finale = cope.replace(code2,'');
+				localStorage.setItem("delete", finale);
+				window.location = "delete.php";
+
+			}
+			};
+			xhttp.open("GET", "Tennis.txt", true);
+			xhttp.send();
+		}
+	</script>
+	<script>
+
+</script>
+<footer>
+	<div id="list" class="objList"><button class="numero" onclick="openA()"><i class='fas fa-cloud-moon-rain'></i></button>&nbsp;<button  class="numero" onclick="openB()"><i class='far fa-question-circle'></i></button>&nbsp;<button class="numero"  onclick="recharge()"><i class='far fa-share-square'></i></button></div>
+	<section id="entity" style="display: none;width: 80%; height: 50%; position: fixed; z-index: 100; background-color: white; top: 25%; left: 10%; border: 3px solid red;">
+		<article style="display: none; zoom: 200%; padding: 10px;" id="1a">
+			<h1> Weather  </h1><br><br>
+			<a class="weatherwidget-io" href="https://forecast7.com/en/34d21n84d14/cumming/?unit=us" data-mode="Current" data-days="3" data-theme="blue-mountains" >Cumming, GA, USA</a>
+			<center>
+			<!-- weather widget start --><a target="_blank" href="https://www.booked.net/weather/cumming-5777"><img src="https://w.bookcdn.com/weather/picture/32_5777_0_1_34495e_250_2c3e50_ffffff_ffffff_1_2071c9_ffffff_0_6.png?scode=124&domid=w209&anc_id=59366"  alt="booked.net"/></a><!-- weather widget end --></center>
+		</article>
+
+		<article style="display: none; zoom: 200%; padding: 10px;" id="2a">
+			<h1> Community Guidelines </h1>
+		</article>
+
+		<button onclick="closeA()" style="position: absolute; top:0; right:0; width: 12%; height: 10%; background-color: white; border: 1px solid grey;"><i class="fa fa-close" style="zoom: 350%; color: red;"></i></button>
+	</section>
+
+	<header onclick="closeA()" id="cdk-overlay" style="display: none; background-color: black; opacity:  0.5; width: 100%; height: 100%; position: fixed;"></header>
+</footer>
+</body>
+<script>
+	function openA() {
+		document.getElementById("entity").style.display = "block";
+		document.getElementById("cdk-overlay").style.display = "block";
+		document.getElementById("2a").style.display = "none";
+		document.getElementById("1a").style.display = "block";
+	}
+	function openB() {
+		document.getElementById("entity").style.display = "block";
+		document.getElementById("cdk-overlay").style.display = "block";
+		document.getElementById("1a").style.display = "none";
+		document.getElementById("2a").style.display = "block";
+	}
+	function recharge() {
+		localStorage.setItem("name", "");
+		window.location = "http://tennis.roydero.com";
+	}
+	function closeA() {
+		document.getElementById("entity").style.display = "none";
+		document.getElementById("cdk-overlay").style.display = "none";
+	}
+</script>
+<script>
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+</script>
+</html>
